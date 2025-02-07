@@ -44,19 +44,24 @@ export const userLogin = async(req,res)=>{
         return res.status(400).json({e:"All fields are required"});
     }
     const user = await User.findOne({
-        $or:{
-            email:emailOrPhone,
-            phone:emailOrPhone
-        }
+        $or:[
+            {email:emailOrPhone},
+            {phone:emailOrPhone}
+        ]
     })
     if(!user){
         return res.status(404).json({e:"User doesnot exists"})
     }
-    const isPasswordCorrect = bcrypt.compare(user.password,password)
+    const isPasswordCorrect = await bcrypt.compare(password,user.password)
     if(!isPasswordCorrect){
         return res.status(401).json({e:"Incorrect Password"})
     }
     const token = generateAccessToken({fullname:user.fullname,email:user.email,phone:user.phone})
     res.cookie('token',token)
     return res.status(200).json({m:"User logged in successfully",token})
+}
+
+export const chats = async(req,res)=>{
+    const fullname = req.user.fullname
+    res.status(200).json({m:`Welcome To Main Page, ${fullname}`})
 }

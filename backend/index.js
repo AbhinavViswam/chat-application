@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import DB_Connect from './db/db.js';
 import userRouter from "./routes/user.route.js"
+import chatRouter from "./routes/chat.route.js"
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use("/user",userRouter)
+app.use("/chat",chatRouter)
 
 DB_Connect()
 

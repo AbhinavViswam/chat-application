@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 
 const conversationSchema = new mongoose.Schema({
-    phone:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
-    }
+    users:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User"
+        }
+    ]
 },{timestamps:true})
 
 const Conversation = mongoose.model("Conversation",conversationSchema)
