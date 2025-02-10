@@ -6,10 +6,14 @@ const messageSchema = new mongoose.Schema({
         ref:"User",
         required:true
     },
+    conversationid:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Message"
+    },
     text:{
         type:String
     },
-    image:{
+    doc:{
         type:String
     }
 },{timestamps:true})
