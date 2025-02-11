@@ -2,6 +2,8 @@ import Conversation from "../model/conversation.model.js";
 import User from "../model/user.model.js"
 import Message from "../model/message.model.js";
 
+import mongoose from "mongoose";
+
 export const addConversation = async(req,res)=>{
     const {phone} = req.body
     if(!phone){
@@ -113,7 +115,7 @@ export const sendDoc = async(req,res)=>{
 }
 
 export const showMessages = async(req,res)=>{
-  const {conversationId} = req.body
+  const {conversationId} = req.params
   if(!conversationId){
     return res.status(400).json({e:"All fields are required"})
   }
@@ -121,5 +123,28 @@ export const showMessages = async(req,res)=>{
   if(!conversation){
     return res.status(404).json({e:"Conversation not found"})
   }
-  console.log(conversation);
+  const messages = await Message.aggregate([
+    {
+      $match:{
+        conversationid:new mongoose.Types.ObjectId(conversationId)
+      }
+    },
+    {
+      $lookup:{
+        from:"users",
+        localField:"sender",
+        foreignField:"_id",
+        as:"senderDetails"
+      }
+    },
+    {$unwind:"$senderDetails"},
+    {
+      $project:{
+        fullname:"$senderDetails.fullname",
+        doc:1,
+        text:1
+      }
+    }
+  ])
+  return res.status(200).json({m:"fetched",messages})
 }
