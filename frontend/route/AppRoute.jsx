@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../components/Login";
+import Register from "../components/Register";
+import Home from "../components/Home";
 function AppRoute(){
     return(
         <BrowserRouter>
         <Routes>
             <Route path="/login" element={<Login/>}/>
-            {/* <Route path="/login"/> */}
+            <Route path="/register" element={<Register/>}/>
+            <Route path="/" element={<Home/>}/>
         </Routes>
         </BrowserRouter>
     )
