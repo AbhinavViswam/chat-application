@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser';
+import cors from "cors"
 
 import DB_Connect from './db/db.js';
 import userRouter from "./routes/user.route.js"
@@ -13,6 +14,7 @@ const app=express();
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors())
 
 app.use("/user",userRouter)
 app.use("/chat",chatRouter)
