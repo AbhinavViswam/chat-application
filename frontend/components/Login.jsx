@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { userContext } from "../context/userContext";
+import axios from "../config/axios"
+import { BsColumnsGap } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [formData, setFormData] = useState({ phone: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const {setUser} = useContext(userContext)
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,13 +23,20 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (validateForm()) {
       setLoading(true);
       console.log("Logging in...", formData);
-      // Add API call for login here
-      setTimeout(() => setLoading(false), 2000); // Simulated delay
+      const res = await axios.post("/user/login",{
+        emailOrPhone:formData.phone,
+        password:formData.password
+      },
+    {withCredentials:true})
+      setTimeout(() => {
+      setLoading(false)
+      navigate("/");
+      }, 2000);
     }
   };
 
@@ -36,7 +49,7 @@ function Login() {
             <input
               type="text"
               name="phone"
-              placeholder="Enter your number"
+              placeholder="Email or Phone"
               value={formData.phone}
               onChange={handleChange}
               className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
@@ -50,7 +63,7 @@ function Login() {
               name="password"
               placeholder="Enter your password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={ handleChange }
               className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-300 w-full"
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}

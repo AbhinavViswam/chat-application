@@ -1,28 +1,29 @@
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaSearch, FaPaperPlane, FaSmile, FaBars } from "react-icons/fa";
 import { IoMdAttach } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoIosClose } from "react-icons/io";
+import { userContext } from "../context/userContext";
 
 function Home() {
+  const {user} = useContext(userContext)
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-gray-200 ">
-      {/* Sidebar (Collapsible for small screens) */}
       <div
         className={`absolute md:relative ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } transition-transform w-64 bg-white border-r border-gray-300 flex flex-col md:w-1/4 lg:w-1/5 z-10`}
       >
-        {/* Header */}
+
         <div className="flex items-center justify-between p-4 border-b border-gray-300">
           <div className="w-10 h-10 bg-green-500 rounded-full"></div>
+          <div>Hello, {user.fullname}</div>
           <button onClick={()=>setSidebarOpen(false)}><IoIosClose className="text-gray-600 cursor-pointer md:hidden text-2xl" /></button>
         </div>
 
-        {/* Search Bar */}
         <div className="p-2">
           <div className="flex items-center bg-gray-100 p-2 rounded-lg">
             <FaSearch className="text-gray-500 mr-2" />
@@ -34,7 +35,6 @@ function Home() {
           </div>
         </div>
 
-        {/* Chat List */}
         <div className="flex-1 overflow-y-auto">
           {[...Array(10)].map((_, i) => (
             <div
