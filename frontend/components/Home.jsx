@@ -1,14 +1,30 @@
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaSearch, FaPaperPlane, FaSmile, FaBars } from "react-icons/fa";
 import { IoMdAttach } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoIosClose } from "react-icons/io";
 import { userContext } from "../context/userContext";
+import axios from "../config/axios"
 
 function Home() {
   const {user} = useContext(userContext)
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [conversations, setConversations] = useState([])
+  const [conversationId, setConversationId] = useState("")
+  const fetchData = async()=>{
+    const res = await axios.get("/chat/showconversations",{withCredentials:true})
+    setConversations(res.data.conversations)
+  }
+
+  const showMessages = async(ConvID)=>{
+    setConversationId(ConvID)
+    const res = await axios.get(`/chat/messages/${conversationId}`,{withCredentials:true})
+    console.log(res.data)
+  }
+  useEffect(()=>{
+    fetchData();
+  },[])
 
   return (
     <div className="flex h-screen bg-gray-200 ">
@@ -20,7 +36,7 @@ function Home() {
 
         <div className="flex items-center justify-between p-4 border-b border-gray-300">
           <div className="w-10 h-10 bg-green-500 rounded-full"></div>
-          <div>Hello, {user.fullname}</div>
+          <div className="flex justify-center items-center">Hello, <p className="font-bold text-xl">{user.fullname}</p></div>
           <button onClick={()=>setSidebarOpen(false)}><IoIosClose className="text-gray-600 cursor-pointer md:hidden text-2xl" /></button>
         </div>
 
@@ -36,18 +52,19 @@ function Home() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          {[...Array(10)].map((_, i) => (
-            <div
+          {conversations?.map((_, i) => (
+            <button
               key={i}
-              className="flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200"
+              onClick={()=>showMessages(_.id)}
+              className="w-full flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200"
             >
               <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
               <div className="ml-3 flex-1">
-                <h3 className="text-gray-800 font-semibold">Contact {i + 1}</h3>
-                <p className="text-gray-500 text-sm">Last message...</p>
+                <h3 className="text-gray-800 font-semibold">{_.fullname}</h3>
+                <p className="text-gray-500 text-sm">{_.phone}</p>
               </div>
               <span className="text-xs text-gray-400">10:30 AM</span>
-            </div>
+            </button>
           ))}
         </div>
       </div>

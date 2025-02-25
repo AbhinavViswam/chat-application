@@ -4,20 +4,19 @@ import { useNavigate } from 'react-router-dom'
 import axios from "../config/axios"
 
 function UserAuth({children}) {
-    const {user,setUser} = useContext(userContext)
+    const {setUser} = useContext(userContext)
     const navigate = useNavigate()
     
     const checkAuth = async () => {
-        console.log("Checking...")
-       
           const res = await axios.get('/user/myData',{withCredentials:true});
-          console.log(res.data)
-        
+          const fullname = res.data.user[0].fullname
+          const phone = res.data.user[0].phone
+          const email = res.data.user[0].email
+          setUser({fullname,phone, email})
       };
-
     useEffect(()=>{
         checkAuth()
-    },[navigate,user,setUser])
+    },[navigate])
   return (
     <>{children}</>
   )

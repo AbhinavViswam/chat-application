@@ -75,7 +75,6 @@ export const chats = async(req,res)=>{
 
 export const myData = async(req,res)=>{
     const token =req.cookies?.token || req.header("Authorization")?.replace("Bearer ","")
-    console.log(token)
     if(!token){
         return res.status(404).json({e:"No token found"})
     }
