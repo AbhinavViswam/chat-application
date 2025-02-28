@@ -102,29 +102,38 @@ function Home() {
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
 
-          {message.length?(
-            <div>
-              {message.map((data,i)=>(
-                <div key={i} className="mb-3 flex justify-start">
-                  <div className="bg-white p-3 rounded-lg shadow max-w-xs">
-                  {data.text?(data.text):(data.doc)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ):(
-            <div>No Messages</div>
-          )}
-          {/* <div className="mb-3 flex justify-start">
+        {message.length ? (
+  <div>
+    {message.map((data, i) => (
+      <div key={i}>
+        {data.fullname !== user.fullname ? (
+          <div className="mb-3 flex justify-start">
             <div className="bg-white p-3 rounded-lg shadow max-w-xs">
-              Hello! How are you?
-            </div>  
-          </div> */}
-          <div className="mb-3 flex justify-end">
-            <div className="bg-green-500 text-white p-3 rounded-lg shadow max-w-xs">
-              I'm good, what about you?
+              {data.text ? (
+                data.text
+              ) : (
+                data.doc && <img src={`/${data.doc}`} alt="Uploaded content" className="max-w-full h-auto rounded-lg" />
+              )}
             </div>
           </div>
+        ) : (
+          <div className="mb-3 flex justify-end">
+            <div className="bg-green-500 text-white p-3 rounded-lg shadow max-w-xs">
+              {data.text ? (
+                data.text
+              ) : (
+                data.doc && <img src={data.doc} alt="Uploaded content" className="max-w-full h-auto rounded-lg" />
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+) : (
+  <div>No Messages</div>
+)}
+
         </div>
 
         {/* Chat Input */}

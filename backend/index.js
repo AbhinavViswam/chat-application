@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser';
 import cors from "cors"
+import path from "path"
 
 import DB_Connect from './db/db.js';
 import userRouter from "./routes/user.route.js"
@@ -20,6 +21,7 @@ app.use(cors(
         credentials:true,
     }
 ))
+app.use("/upload", express.static(path.join(process.cwd(), "upload")));
 
 app.use("/user",userRouter)
 app.use("/chat",chatRouter)

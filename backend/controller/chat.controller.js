@@ -96,7 +96,7 @@ export const sendMessage = async(req,res)=>{
 }
 
 export const sendDoc = async(req,res)=>{
-  const doc = req.file.path.replace(`\\`,"/")
+  const doc = req.file.path.replace(/\\/g, "/");
   const {conversationId} = req.params;
   if(!conversationId){
     return res.status(400).json({e:"Cannot find conversationID"})
