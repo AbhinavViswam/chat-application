@@ -11,17 +11,26 @@ function Home() {
   const {user} = useContext(userContext)
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState([])
+  const [message, setMessage] = useState([])
   const [conversationId, setConversationId] = useState("")
+
   const fetchData = async()=>{
     const res = await axios.get("/chat/showconversations",{withCredentials:true})
     setConversations(res.data.conversations)
   }
 
-  const showMessages = async(ConvID)=>{
-    setConversationId(ConvID)
+  const showMessages = async()=>{
     const res = await axios.get(`/chat/messages/${conversationId}`,{withCredentials:true})
-    console.log(res.data)
+    console.log(res.data.messages)
+    setMessage(res.data.messages)
   }
+
+  useEffect(()=>{
+    if(conversationId){
+      showMessages();
+    }
+  },[conversationId])
+
   useEffect(()=>{
     fetchData();
   },[])
@@ -55,7 +64,7 @@ function Home() {
           {conversations?.map((_, i) => (
             <button
               key={i}
-              onClick={()=>showMessages(_.id)}
+              onClick={()=>setConversationId(_._id)}
               className="w-full flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200"
             >
               <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
@@ -92,11 +101,25 @@ function Home() {
 
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
-          <div className="mb-3 flex justify-start">
+
+          {message.length?(
+            <div>
+              {message.map((data,i)=>(
+                <div key={i} className="mb-3 flex justify-start">
+                  <div className="bg-white p-3 rounded-lg shadow max-w-xs">
+                  {data.text?(data.text):(data.doc)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ):(
+            <div>No Messages</div>
+          )}
+          {/* <div className="mb-3 flex justify-start">
             <div className="bg-white p-3 rounded-lg shadow max-w-xs">
               Hello! How are you?
-            </div>
-          </div>
+            </div>  
+          </div> */}
           <div className="mb-3 flex justify-end">
             <div className="bg-green-500 text-white p-3 rounded-lg shadow max-w-xs">
               I'm good, what about you?

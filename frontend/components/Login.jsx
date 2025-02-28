@@ -33,10 +33,8 @@ function Login() {
         password:formData.password
       },
     {withCredentials:true})
-      setTimeout(() => {
       setLoading(false)
       navigate("/");
-      }, 2000);
     }
   };
 
